@@ -8,12 +8,24 @@
 </head>
 <body>
     <div class="cpu">
-        <p>cpuが返した単語を出力</p>
+        <p>{{ msg }}</p>
     </div>
     <div class="wordlist_used">
         <p>これまでに使われた単語のリスト</p>
+        <!-- {{ list_kari }} -->
+        <ul>
+            {% for list in list_kari%}
+                <li>{{ list }}</li>
+            {% endfor %}
+        </ul>
     </div>
     <div class="user">
-        <p>userが入力するエリア</p>
+        <p>
+            
+            <form action="" method="post">
+                input! → <input type="text" name="" id="">
+            </form>
+        </p>
     </div>
+</body>
 </html>

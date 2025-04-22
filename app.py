@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from test import import_test
+from test import import_test, list_kari
 
 app = Flask("shiritori")
 
@@ -8,7 +8,8 @@ def test():
     return render_template(
         'index.html',
         message = 'shiritori apuri !!',
-        msg = import_test()
+        msg = import_test(),
+        list_kari = list_kari
         )
 
 

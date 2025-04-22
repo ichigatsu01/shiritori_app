@@ -3,6 +3,33 @@ body {
     text-align: center;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+.cpu, .wordlist_used, .user {
+    display: block;
     align-content: space-around;
-    height: 100%;
+    background-color: #f8e0c0
+}
+.cpu {
+    flex: .25;
+    font-size: 2.5rem;
+    margin: 0;
+}
+.wordlist_used {
+    flex: .5;
+    background-color: #5e9fc5;
+    font-size: 1.8rem;
+}
+.wordlist_used ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+.wordlist_used ul li{
+    margin-right: 20px;
+}
+.user {
+    flex: .25;
+    font-size: 2.5rem;
 }
