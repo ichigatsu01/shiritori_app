@@ -1,0 +1,8 @@
+body {
+    background-color: tan;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-content: space-around;
+    height: 100%;
+}
