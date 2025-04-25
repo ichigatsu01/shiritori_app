@@ -9,12 +9,24 @@ body {
 .cpu, .wordlist_used, .user {
     display: block;
     align-content: space-around;
-    background-color: #f8e0c0
+    background-color: #f8e0c0;
 }
 .cpu {
     flex: .25;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 2.5rem;
-    margin: 0;
+}
+.cpu img {
+    height: 100px;
+    width: 100px;
+}
+.cpu span {
+    background-color: #fff;
+    margin-left: 20px;
+    padding: 10px;
+    
 }
 .wordlist_used {
     flex: .5;
@@ -28,8 +40,26 @@ body {
 }
 .wordlist_used ul li{
     margin-right: 20px;
+    background-color: aliceblue;
+    padding: 10px 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 100px;
 }
 .user {
     flex: .25;
     font-size: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+input[type="text"], input[type="submit"] {
+    height: 40px;
+    vertical-align: middle;
+}
+input[type="text"] {
+    margin-left: 20px;
+}
+input[type="submit"] {
+    width: 60px;
 }

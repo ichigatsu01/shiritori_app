@@ -131,6 +131,7 @@ def choice_word_cpu(inputed_word_user):
     print(f'これまでに使われた単語：{worddict_used}')
     return selected_word_cpu
 
+#! 以下テストプレイ用のコード
 gameend_flag = False
 while gameend_flag == False:
     game_start = input('先攻でプレイしますか？ y/n: ')
