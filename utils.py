@@ -1,159 +1,137 @@
-import unicodedata
-import json
-import random
+# 使用する変数の整理…グローバルとローカルで使う名前を変える
 
-class ShiritoriGame:
-    def __init__(self):
-        self.worddict_cpu = {} # cpuがゲーム中に使う辞書
-        self.worddict_used = [] # user, cpuが使った単語を格納するためのリスト
-        self.selected_word_cpu = "" # cpuが前回選んだ単語
-        self.inputed_word_user = "" # userが前回入力した単語
-        self.n_count = 0 # 「ん」で終わらせようとするuser向けチェッカー
+import unicodedata, json, random
 
-    def startGame(self): # CPUが使う辞書の読込
-        with open('worddict.json', mode="r", encoding="utf-8") as f:
-            self.worddict_cpu = json.load(f)
+# CPUが使う辞書の読込
+worddict_cpu = {} # cpuが単語選択に使う辞書
+worddict_used = [] # user, cpuが使った単語を格納するためのリスト
+selected_word_cpu = "" # cpuが前回選んだ単語
+inputed_word_user = "" # userが前回入力した単語
+next_letter = "" # 次の単語の頭文字
 
-    # 前回の文字の終わりと今回の文字の頭の比較用の関数
-    def lastletterChecker(self, prev, follow):
-        prev_last = prev[-1]
-        # 最後の文字が伸ばし棒の場合、一つ前の文字をとる
-        if prev_last == "ー":
-            prev_last = prev[-2]
 
-        # 濁点・半濁点で終わる場合、次のプレイヤーが始める言葉は濁点・半濁点を取り除いたものとする
-        # inputed_word_user = "かんじ"
-        table = str.maketrans(
-            "がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ", # 変換元の文字
-            "かきくけこさしすせそたちつてとはひふへほはひふへほ" # 変換先の文字
-            )
-        prev_last = prev_last.translate(table)
+def fileOpen(): # cpuの辞書を取得する
+    with open('worddict.json', mode="r", encoding="utf-8") as f:
+        # worddict_cpu = json.load(f)
+        return json.load(f)
 
-        # follow_first_letter = follow[0]
-        return prev_last, follow[0]
-    
-    # 前回の文字の終わりと今回の文字の頭の比較を関数化する
-    # !CPUは自分が選ぶ単語だけを確定すればいいのでuserチェックと内容を変える
-    def lastletterChecker_forCPU(self, prev):
-        # prev_last_letter = prev[-1]
-        # # 最後の文字が伸ばし棒の場合、一つ前の文字をとる
-        # if prev_last_letter == "ー":
-        #     prev_last_letter = prev[-2]
+# 前回の文字の終わりと今回の文字の頭の比較用の関数。cpuの場合、
+def lastletterChecker(prev_word, follow_word):
+    prev_letter = prev_word[-1]
+    # 最後の文字が伸ばし棒の場合、一つ前の文字をとる
+    if prev_letter == "ー":
+        prev_letter = prev_word[-2]
 
-        # # 濁点・半濁点で終わる場合、次のプレイヤーが始める言葉は濁点・半濁点を取り除いたものとする
-        # table = str.maketrans(
-        #     "がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ", # 変換元の文字
-        #     "かきくけこさしすせそたちつてとはひふへほはひふへほ" # 変換先の文字
-        #     )
-        # prev_last_letter = prev_last_letter.translate(table)
-        # return prev_last_letter
-        return self.lastletterChecker(prev, prev)[0]
-    
-    def check_inputed_user(self): #userの入力内容をチェックする
-        # ユーザの入力チェック
-        while True:
-        # 未入力チェック
-            self.inputed_word_user = input('ひらがなを入力してください：')
-            if self.inputed_word_user == "":
-                print("空白のままでは送信できません")
+    # prev濁点・半濁点で終わる場合、次のプレイヤーが始める言葉は濁点・半濁点を取り除いたものとする
+    table = str.maketrans(
+        "がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ", # 変換元の文字
+        "かきくけこさしすせそたちつてとはひふへほはひふへほ" # 変換先の文字
+        )
+    prev_letter = prev_letter.translate(table)
+
+    follow_letter = follow_word[0] # 次のターンがuserの場合、follow_letterから始まる単語を使わせる
+    return prev_letter, follow_letter
+
+
+# # 前回の文字の終わりと今回の文字の頭の比較を関数化する
+# # !CPUは自分が選ぶ単語だけを確定すればいいのでuserチェックと内容を変える
+# def lastletterChecker_forCPU(prev):
+#     prev_last_letter = prev[-1]
+#     # 最後の文字が伸ばし棒の場合、一つ前の文字をとる
+#     if prev_last_letter == "ー":
+#         prev_last_letter = prev[-2]
+
+#     # 濁点・半濁点で終わる場合、次のプレイヤーが始める言葉は濁点・半濁点を取り除いたものとする
+#     table = str.maketrans(
+#         "がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ", # 変換元の文字
+#         "かきくけこさしすせそたちつてとはひふへほはひふへほ" # 変換先の文字
+#         )
+#     prev_last_letter = prev_last_letter.translate(table)
+#     return prev_last_letter
+
+#! userの入力内容をチェックする。
+#! 元々Python単体で完結できるようにcontinueを使ったがbreakでerror_messageを返すべきかも
+#* 引数について：inputed=userがブラウザでinputした単語, used=worddict_used, cpu=selected_word_cpu
+def check_inputed_user(inputed, used, cpu):
+    n_count = 0 # 「ん」で終わらせようとするuser向けチェッカー
+    # ユーザの入力チェック
+    while True:
+    #* 未入力チェック...これはブラウザ側でやるから必要ない可能性が高い
+        # inputed = input('ひらがなを入力してください：')
+        if inputed == "":
+            print("空白のままでは送信できません")
+            continue
+
+        # 入力された単語はひらがなか？
+        all_hiragana = True
+        for letter in inputed:
+            # print(unicodedata.name(letter))
+            if 'HIRAGANA' not in unicodedata.name(letter):
+                all_hiragana = False
+
+        if not all_hiragana:
+            print('注意：入力は平仮名のみにしてください！')
+            continue
+
+        # 入力された単語は使用済みか？
+        if inputed in used:
+            print('注意：その単語は既に使われています！')
+            continue
+
+        # cpuの単語から続く言葉を入力しているか？
+        if cpu != "": #userが先行の場合はスキップ
+            prev, follow = lastletterChecker(cpu, inputed)
+            if prev != follow:
+                print("CPUの言葉に続く単語を入力してください！")
                 continue
 
-            # 入力された単語はひらがなか？
-            all_hiragana = True
-            for letter in self.inputed_word_user:
-                # print(unicodedata.name(letter))
-                if 'HIRAGANA' not in unicodedata.name(letter):
-                    all_hiragana = False
-
-            if not all_hiragana:
-                print('注意：入力は平仮名のみにしてください！')
+        # 「ん」で終わる単語を入れるuserがいたら必死に止める
+        if inputed[-1] == "ん":
+            if n_count == 0:
+                print("本当に「ん」で終わる単語を入れますか？")
+                n_count += 1
                 continue
-
-            # 入力された単語は使用済みか？
-            if self.inputed_word_user in self.worddict_used:
-                print('注意：その単語は既に使われています！')
+            elif n_count == 1:
+                print("後悔しませんね？")
+                n_count += 1
                 continue
+            elif n_count == 2:
+                print("本当に後悔しませんね？")
+                n_count += 1
+                continue
+            else:
+                print("CPUの勝ちですって言うかCPUに勝たせました")
+                inputed = None
+                return inputed
 
-            # cpuの単語から続く言葉を入力しているか？
-            if self.selected_word_cpu != "": #userが先行の場合はスキップ
-                prev, follow = self.lastletterChecker(self.selected_word_cpu, self.inputed_word_user)
-                if prev != follow:
-                    print("CPUの言葉に続く単語を入力してください！")
-                    continue
+        print(f'入力文字：{inputed}')
 
-            # 「ん」で終わる単語を入れるuserがいたら必死に止める
-            if self.inputed_word_user[-1] == "ん":
-                if self.n_count == 0:
-                    print("本当に「ん」で終わる単語を入れますか？")
-                    self.n_count += 1
-                    continue
-                elif self.n_count == 1:
-                    print("後悔しませんね？")
-                    self.n_count += 1
-                    continue
-                elif self.n_count == 2:
-                    print("本当に後悔しませんね？")
-                    self.n_count += 1
-                    continue
-                else:
-                    print("CPUの勝ちですって言うかCPUに勝たせました")
-                    # self.inputed_word_user = None
-                    # return self.inputed_word_user
-                    # break
-                    return None
+        used.append(inputed)
+        print(f'returnされたinputed: {inputed}')
+        print(f'これまでに使われた単語：{used}')
 
-            print(f'入力文字：{self.inputed_word_user}')
-
-            self.worddict_used.append(self.inputed_word_user)
-            print(f'returnされたinputed_word_user: {self.inputed_word_user}')
-            print(f'これまでに使われた単語：{self.worddict_used}')
-
-            return self.inputed_word_user
-        
-    def choice_word_cpu(self, inputed_word_user):
-        # CPUが単語を選ぶ時の処理
-
-        if self.inputed_word_user == "":
-            head = random.choice(list(self.worddict_cpu.keys())) # cpu先攻の場合は辞書からランダムに選ぶ
-
-        else:
-            head = self.lastletterChecker_forCPU(inputed_word_user)
-            if len(self.worddict_cpu[head]) == 0:
-                print("CPUが出せる単語はもうありません。あなたの勝ちです")
-                return None
-            
-        self.selected_word_cpu = self.worddict_cpu[head][0]
-
-        print(f'CPUが選んだ単語： {self.selected_word_cpu}')
-        self.worddict_used.append(self.selected_word_cpu)
-        self.worddict_cpu[head].remove(self.selected_word_cpu) # cpuが選んだ単語をリストから除外
-
-        print(f'returnされたselected_word_cpu: {self.selected_word_cpu}')
-        print(f'これまでに使われた単語：{self.worddict_used}')
-        return self.selected_word_cpu
+        return inputed, used
 
 
-# # CPUが使う辞書の読込
-# # worddict_cpu = {}
-# with open('worddict.json', mode="r", encoding="utf-8") as f:
-#     worddict_cpu = json.load(f)
+def choice_word_cpu(inputed, dict_cpu, dict_used): # CPUが単語を選ぶ時の処理
+    if inputed == "": # cpu先攻の場合は辞書からランダムに選ぶ
+        letter = random.choice(list(worddict_cpu.keys()))
+    else:
+        letter = lastletterChecker(inputed, inputed)
+        if len(dict_cpu[letter]) == 0:
+            print("CPUが出せる単語はもうありません。あなたの勝ちです")
+            return None
 
+    selected = dict_cpu[letter][0]
+    print(f'CPUが選んだ単語： {selected}')
 
-# worddict_used = [] # user, cpuが使った単語を格納するためのリスト
-# selected_word_cpu = "" # cpuが前回選んだ単語
-# inputed_word_user = "" # userが前回入力した単語
+    # 使用済み辞書への追加と、cpuが使う辞書からの使用した単語の除去
+    dict_used.append(selected)
+    dict_cpu[selected[0]].remove(selected)
 
-
-
-
-
-
-
-
-
-
-
-
+    print(f'returnされたselected: {selected}')
+    print(f'これまでに使われた単語：{dict_used}')
+    return selected, dict_cpu, dict_used
 
 #! 以下テストプレイ用のコード
 gameend_flag = False
