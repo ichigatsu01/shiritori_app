@@ -23,10 +23,27 @@ body {
     width: 100px;
 }
 .cpu span {
-    background-color: #fff;
-    margin-left: 20px;
-    padding: 10px;
-    
+    position: relative;
+    display: inline-block;
+    /* margin-left: 30px; */
+    margin: 30px 20px;
+    padding: 7px 30px;
+    min-width: 120px;
+    max-width: 100%;
+    color: #555;
+    font-size: 40px;
+    background: #fff;
+    border-radius: 100px;
+}
+.cpu span::before {
+    content: "";
+    position: absolute;
+    top: 40%;
+    left: -30px;
+    margin-top: -15px;
+    border: 20px solid transparent;
+    border-right: 20px solid #fff;
+
 }
 .wordlist_used {
     flex: .5;
@@ -50,6 +67,7 @@ body {
     flex: .25;
     font-size: 2.5rem;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -59,7 +77,12 @@ input[type="text"], input[type="submit"] {
 }
 input[type="text"] {
     margin-left: 20px;
+    max-width: 300px;
+    font-size: 30px;
 }
-input[type="submit"] {
-    width: 60px;
+.input input[type="submit"] {
+    width: 100px;
+}
+.restart input[type="submit"] {
+    width: 200px;
 }

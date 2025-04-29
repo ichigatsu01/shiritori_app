@@ -7,24 +7,50 @@
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
+    {% if game.is_user_first == None %}
+        <h1>しりとりゲームアプリ</h1>
+        <ul>
+            <p>ルール</p>
+            <li>濁点・半濁点は考慮されません。</li>
+            <li>例）りんご　→　次の言葉は「こ」から始める</li>
+            <li>CPUが使う言葉は幼児向けひらがなの一覧を参照しています：</li>
+            <li>https://kids-points.com/hiragana_kotoba_all/</li>
+            <li>なお「ぬ」や「る」などの語彙が少ないので、勝ちたい場合はそれを使うと良いです。</li>
+
+        </ul>
+        <h2>先攻・後攻を選んでください！</h1>
+        <form action="" method="post">
+            <!-- <input type="submit" value="先攻" name="turn">
+            <input type="submit" value="後攻" name="turn"> -->
+            <button type="submit" name="turn" value="先攻">先攻</button>
+            <button type="submit" name="turn" value="後攻">後攻</button>
+        </form>
+    {% else %}
     <div class="cpu">
         <img src="../static/img/android2.svg" alt="cpuの画像">
         <span>{{ msg }}</span>
     </div>
     <div class="wordlist_used">
         <p>これまでに使われた単語のリスト</p>
-        <!-- {{ list_kari }} -->
         <ul>
-            {% for list in list_kari%}
+            {% for list in lists%}
                 <li>{{ list }}</li>
             {% endfor %}
         </ul>
     </div>
     <div class="user">
-        <form action="" method="post">
-            input! →<input type="text" name="" id="">
-            <input type="submit" value="GO!">
-        </form>
+        <div>
+            <form action="game" method="post">
+                input! →<input type="text" name="inputed" required autofocus>
+                <input type="submit" value="GO!" class="input">
+            </form>
+        </div>
+        <div>
+            <form action="reset" method="post">
+                <input type="submit" value="再スタート" class="restart">
+            </form>
+        </div>
     </div>
+    {% endif %}
 </body>
 </html>
