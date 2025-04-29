@@ -3,5 +3,4 @@ __pycache__/
 *.pyc
 worddict copy.json
 todo.txt
-utils_old.py
 kansou.txt
