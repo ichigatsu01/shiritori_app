@@ -91,7 +91,6 @@ class Game:
 
 
     def choice_word_cpu(self, inputed, dict_cpu, dict_used): # CPUが単語を選ぶ時の処理
-        print("CPUが言葉を選んでいます")
         if inputed == "": # cpu先攻の場合は辞書からランダムに選ぶ
             letter = random.choice(list(dict_cpu.keys()))
         else:
