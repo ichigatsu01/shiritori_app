@@ -8,31 +8,32 @@
 </head>
 <body>
     {% if game.is_user_first == None %}
-        <h1>しりとりゲームアプリ</h1>
-        <ul>
-            <p>ルール</p>
-            <li>濁点・半濁点は考慮されません。</li>
-            <li>例）りんご　→　次の言葉は「こ」から始める</li>
-            <li>CPUが使う言葉は幼児向けひらがなの一覧を参照しています：</li>
-            <li>https://kids-points.com/hiragana_kotoba_all/</li>
-            <li>なお「ぬ」や「る」などの語彙が少ないので、勝ちたい場合はそれを使うと良いです。</li>
-
-        </ul>
-        <h2>先攻・後攻を選んでください！</h1>
-        <form action="" method="post">
-            <!-- <input type="submit" value="先攻" name="turn">
-            <input type="submit" value="後攻" name="turn"> -->
-            <button type="submit" name="turn" value="先攻">先攻</button>
-            <button type="submit" name="turn" value="後攻">後攻</button>
-        </form>
+        <div class="index">
+            <h1>しりとりゲームアプリ</h1>
+            <ul>
+                <p>ルール</p>
+                <li>濁点・半濁点は考慮されません。</li>
+                <li>例）りんご　→　次の言葉は「こ」から始める</li>
+                <li>CPUが使う言葉は幼児向けひらがなの一覧を参照しています：</li>
+                <li>https://kids-points.com/hiragana_kotoba_all/</li>
+                <li>なお「ぬ」や「る」などの語彙が少ないので、勝ちたい場合はそれを使うと良いです。</li>
+            </ul>
+            <h2>先攻・後攻を選んでください！</h1>
+            <form action="" method="post">
+                <!-- <input type="submit" value="先攻" name="turn">
+                <input type="submit" value="後攻" name="turn"> -->
+                <button type="submit" name="turn" value="先攻">先攻</button>
+                <button type="submit" name="turn" value="後攻">後攻</button>
+            </form>
+        </div>
     {% else %}
     <div class="cpu">
         <img src="../static/img/android2.svg" alt="cpuの画像">
         <span>{{ msg }}</span>
     </div>
     <div class="wordlist_used">
-        <p>これまでに使われた単語のリスト</p>
-        <ul>
+        <p class="used_title">これまでに使われた単語のリスト</p>
+        <ul class="used_list">
             {% for list in lists%}
                 <li>{{ list }}</li>
             {% endfor %}
