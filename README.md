@@ -3,7 +3,10 @@ Python、Flaskの練習を兼ねて作りました。
 CPUはディレクトリ内にあるworddict.jsonを基に、こちらが入力した文字に続く言葉を返します。  
 
 ## スクリーンショット
-![Screen1](static/img/ss_1.png) ![Screen2](static/img/ss_2.png)
+<p align="center">
+  <img src="static/img/ss_1.png" width="45%" />
+  <img src="static/img/ss_2.png" width="45%" />
+</p>
 
 ## 遊び方
 - 先攻または後攻を選ぶ。後攻を選んだ場合、CPUが辞書の中からランダムで一つ単語を選びます。  
