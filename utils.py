@@ -2,6 +2,7 @@
 import unicodedata
 import json
 import random
+import os
 
 class Game:
     def __init__(self):
@@ -16,8 +17,11 @@ class Game:
         self.is_user_first = None
 
     def fileOpen(self): # cpuが使う辞書を取得する
+        # renderでの挙動が不安定のため修正
         try:
-            with open('data\worddict.json', mode="r", encoding="utf-8") as f:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            dict_path = os.path.join(base_dir, 'data', 'worddict.json')
+            with open(dict_path, mode="r", encoding="utf-8") as f:
                 return json.load(f)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f'絶対に起きないはずのエラー、起きたらファイルが消えてる: {e}')
