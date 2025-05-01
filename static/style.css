@@ -6,16 +6,16 @@ body {
     height: 100vh;
     margin: 0;
 }
-.index h2 {
+/* .index h2 {
     margin-top: 50px;
-}
+} */
 .index ul {
     list-style: none;
 }
 .index form button {
     width: 150px;
     height: 80px;
-    margin: 15px 30px;
+    margin: 0 30px;
     font-size: 24px;
 }
 .cpu, .wordlist_used, .user {

@@ -17,7 +17,7 @@ class Game:
 
     def fileOpen(self): # cpuが使う辞書を取得する
         try:
-            with open('worddict.json', mode="r", encoding="utf-8") as f:
+            with open('data\worddict.json', mode="r", encoding="utf-8") as f:
                 return json.load(f)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f'絶対に起きないはずのエラー、起きたらファイルが消えてる: {e}')
@@ -31,9 +31,14 @@ class Game:
             prev_letter = prev_word[-2]
 
         # prev濁点・半濁点で終わる場合、次のプレイヤーが始める言葉は濁点・半濁点を取り除いたものとする
+        # table = str.maketrans(
+        #     "がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょ", # 変換元の文字
+        #     "かきくけこさしすせそたちつてとはひふへほはひふへほやゆよ" # 変換先の文字
+        #     )
+        #! 辞書に濁点・半濁点が追加されたため、修正する文字はゃゅょのみとする
         table = str.maketrans(
-            "がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ", # 変換元の文字
-            "かきくけこさしすせそたちつてとはひふへほはひふへほ" # 変換先の文字
+            "ゃゅょ", # 変換元の文字
+            "やゆよ" # 変換先の文字
             )
         prev_letter = prev_letter.translate(table)
 
@@ -65,7 +70,7 @@ class Game:
             if cpu != "": #userが先行の場合はスキップ
                 prev, follow = self.lastletterChecker(cpu, inputed)
                 if prev != follow:
-                    self.alert_message = 'CPUの言葉に続けてください（濁音・半濁音不可）！'
+                    self.alert_message = f'CPUの言葉に続けてください！: {prev}'
                     return self.alert_message
 
             # 「ん」で終わる単語を入れるuserがいたら必死に止める
