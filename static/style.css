@@ -6,9 +6,16 @@ body {
     height: 100vh;
     margin: 0;
 }
-/* .index h2 {
-    margin-top: 50px;
-} */
+.index {
+    width: 60vw;
+    margin: 0 auto;
+}
+.index .message {
+    margin: 10px 20px;
+    padding: 5px 20px 20px 20px;
+    background-color: #c1994d;
+    border-radius: 30px;
+}
 .index ul {
     list-style: none;
 }
