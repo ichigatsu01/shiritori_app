@@ -1,6 +1,7 @@
 # しりとりアプリ
 Python、Flaskの練習を兼ねて作りました。  
 CPUはディレクトリ内にあるworddict.jsonを基に、こちらが入力した文字に続く言葉を返します。  
+Renderにて公開しています → [リンク](https://shiritori-app.onrender.com/)
 
 ## スクリーンショット
 <p align="center">
